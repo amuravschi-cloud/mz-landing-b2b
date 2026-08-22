@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { METAL_PRODUCTS, BASES_LIST, COMPANY_CONTACTS } from "./data/catalog";
+import { getAssetPath } from "./utils";
 
 export default function HomePage() {
   const [lang, setLang] = useState<"ru" | "ro">("ru");
@@ -52,10 +53,9 @@ export default function HomePage() {
   });
 
   const heroImageY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.2]);
 
   const handleOpenQuote = (title?: string) => {
-    setModalItemTitle(title || (lang === "ru" ? "Запрос спецификации / КП" : "Cerere ofertă comercială"));
+    setModalItemTitle(title || (lang === "ru" ? "Запрос расчёта наличия и цен" : "Solicită ofertă de preț"));
     setIsQuoteModalOpen(true);
     setFormSuccess(false);
   };
@@ -135,15 +135,15 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 2. MAIN HEADER (PROPORTIONAL LARGE LOGO & B2B NAV) */}
+      {/* 2. MAIN HEADER */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 sm:h-24 flex items-center justify-between gap-4 sm:gap-6">
           
-          {/* Logo & Brand - Full Official Brand Logo */}
+          {/* Logo & Brand */}
           <a href="#" className="flex items-center shrink-0">
             <div className="relative h-12 sm:h-14 w-44 sm:w-56 flex items-center transition hover:opacity-90">
               <Image
-                src="/images/logo/MZ_Logo_Dark_Green.png"
+                src={getAssetPath("/images/logo/MZ_Logo_Dark_Green.png")}
                 alt="Metalica Zuev Logo"
                 fill
                 className="object-contain object-left"
@@ -190,7 +190,7 @@ export default function HomePage() {
               className="btn-bevel-green text-white font-extrabold text-xs sm:text-sm px-5 py-3 rounded-xl transition transform active:scale-95 flex items-center gap-2 whitespace-nowrap shrink-0 shadow-md"
             >
               <FileText className="w-4 h-4 text-emerald-200" />
-              <span>{lang === "ru" ? "Запросить КП" : "Cere Ofertă"}</span>
+              <span>{lang === "ru" ? "Запросить расчёт" : "Cere Ofertă"}</span>
             </button>
 
             {/* Mobile Menu Button */}
@@ -218,6 +218,13 @@ export default function HomePage() {
                 className="block text-sm font-bold text-slate-800 py-2 border-b border-slate-100"
               >
                 {lang === "ru" ? "Сортамент металлопроката (450+ позиций)" : "Sortiment produse metalice"}
+              </a>
+              <a
+                href="#company"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block text-sm font-bold text-slate-800 py-2 border-b border-slate-100"
+              >
+                {lang === "ru" ? "О компании Metalica Zuev" : "Despre Metalica Zuev"}
               </a>
               <a
                 href="#service"
@@ -264,7 +271,7 @@ export default function HomePage() {
           className="absolute inset-0 z-0 scale-105"
         >
           <Image
-            src="/images/real/hero_img_0065.jpg"
+            src={getAssetPath("/images/real/hero_img_0065.jpg")}
             alt="Реальная металлобаза Metalica Zuev с козловым краном"
             fill
             className="object-cover object-center brightness-95 saturate-100"
@@ -333,7 +340,7 @@ export default function HomePage() {
                   className="btn-bevel-green text-white font-black text-sm sm:text-base px-8 py-4 rounded-xl shadow-xl transition transform active:scale-95 flex items-center justify-center gap-2.5"
                 >
                   <FileText className="w-5 h-5 text-emerald-200" />
-                  <span>{lang === "ru" ? "Запросить расчет и КП" : "Solicită o ofertă"}</span>
+                  <span>{lang === "ru" ? "Запросить расчет наличия и цен" : "Solicită o ofertă"}</span>
                   <span>→</span>
                 </button>
 
@@ -386,7 +393,7 @@ export default function HomePage() {
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   {lang === "ru"
-                    ? "Укажите нужные позиции — дежурный менеджер проверит наличие на всех складах и сформирует КП."
+                    ? "Укажите нужные позиции — дежурный менеджер проверит наличие на всех складах и сформирует расчет."
                     : "Lăsați numărul de telefon — managerul vă va contacta direct pentru ofertă."}
                 </p>
               </div>
@@ -430,7 +437,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. COMPLETE B2B PRODUCT CATALOG (FULL SPEC SHEET, NOT COMMERCE CARDS) */}
+      {/* 4. COMPLETE B2B PRODUCT CATALOG */}
       <section id="catalog" className="py-16 sm:py-24 bg-[#f8fafc] border-b border-slate-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           
@@ -523,7 +530,7 @@ export default function HomePage() {
                       className="w-full bg-[#064e3b] hover:bg-[#047857] text-white font-bold text-xs py-3.5 rounded-xl transition flex items-center justify-center gap-2 shadow-sm"
                     >
                       <FileText className="w-4 h-4 text-emerald-200" />
-                      <span>{lang === "ru" ? "Запросить наличие и КП" : "Verifică stocul →"}</span>
+                      <span>{lang === "ru" ? "Запросить наличие и цену" : "Verifică stocul →"}</span>
                     </button>
                   </div>
                 </div>
@@ -609,7 +616,7 @@ export default function HomePage() {
 
             <div className="lg:col-span-5 relative h-80 sm:h-[440px] rounded-3xl overflow-hidden border-2 border-emerald-700 shadow-2xl">
               <Image
-                src="/images/real/DSC00421.jpg"
+                src={getAssetPath("/images/real/DSC00421.jpg")}
                 alt="Склад металлопроката Metalica Zuev"
                 fill
                 className="object-cover object-center"
@@ -625,7 +632,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. SERVICES SECTION (KOMPLEKTATSIYA, DEBITARE, LIVRARE) */}
+      {/* 5. SERVICES SECTION */}
       <section id="service" className="py-16 sm:py-24 bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
@@ -708,7 +715,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 6. BASES & WAREHOUSES SECTION (OFFICIAL 3 BASES + HUB WITH MAPS) */}
+      {/* 6. BASES & WAREHOUSES SECTION */}
       <section id="bases" className="py-16 sm:py-24 bg-[#081712] text-white border-b-4 border-[#064e3b]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           
@@ -842,7 +849,7 @@ export default function HomePage() {
               {/* REAL PHOTO OF THIS EXACT BASE */}
               <div className="lg:col-span-6 relative h-72 sm:h-96 rounded-2xl overflow-hidden border border-emerald-700 shadow-2xl">
                 <Image
-                  src={activeBase.image}
+                  src={getAssetPath(activeBase.image)}
                   alt={activeBase.title}
                   fill
                   className="object-cover object-center"
@@ -925,11 +932,11 @@ export default function HomePage() {
                 type="submit"
                 className="w-full btn-bevel-green text-white font-black text-base py-4 rounded-xl shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2"
               >
-                <span>{lang === "ru" ? "Жду звонка / КП →" : "Aștept apelul →"}</span>
+                <span>{lang === "ru" ? "Запросить расчёт наличия и цен →" : "Solicită ofertă de preț →"}</span>
               </button>
 
               <p className="text-[11px] text-slate-500 text-center">
-                {lang === "ru" ? "После отправки менеджер подготовит КП и свяжется с вами." : "După trimitere managerul vă va contacta pentru detalii."}
+                {lang === "ru" ? "После отправки менеджер подготовит расчет и свяжется с вами." : "După trimitere managerul vă va contacta pentru detalii."}
               </p>
 
               {formSuccess && (
@@ -948,7 +955,7 @@ export default function HomePage() {
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 relative bg-white rounded-lg p-0.5 flex items-center justify-center">
               <Image
-                src="/images/logo/MZ_Logo_Dark_Green.png"
+                src={getAssetPath("/images/logo/MZ_Logo_Dark_Green.png")}
                 alt="Metalica Zuev Logo"
                 width={28}
                 height={28}
@@ -997,7 +1004,7 @@ export default function HomePage() {
           className="flex-1 bg-white border border-slate-300 text-slate-900 font-bold py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 text-xs shadow"
         >
           <FileText className="w-4 h-4 text-[#064e3b]" />
-          <span>{lang === "ru" ? "КП" : "Ofertă"}</span>
+          <span>{lang === "ru" ? "Расчёт" : "Ofertă"}</span>
         </button>
       </div>
 
@@ -1020,7 +1027,7 @@ export default function HomePage() {
 
               <div className="space-y-1">
                 <span className="text-[11px] font-bold text-[#064e3b] uppercase tracking-wider bg-[#e6f4f0] px-2.5 py-0.5 rounded">
-                  {lang === "ru" ? "Запрос коммерческого предложения" : "Cerere ofertă comercială"}
+                  {lang === "ru" ? "Запрос расчёта наличия и цен" : "Cerere ofertă de preț"}
                 </span>
                 <h3 className="text-xl font-black text-slate-900">
                   {modalItemTitle}
@@ -1078,7 +1085,7 @@ export default function HomePage() {
                   type="submit"
                   className="w-full btn-bevel-green text-white font-black text-sm py-3.5 rounded-xl shadow-lg transition"
                 >
-                  {lang === "ru" ? "Отправить запрос менеджеру" : "Trimite solicitarea"}
+                  {lang === "ru" ? "Отправить заявку на расчёт" : "Trimite solicitarea"}
                 </button>
 
                 {formSuccess && (
