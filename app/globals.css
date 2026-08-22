@@ -1,26 +1,92 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --bg-main: #f8fafc;
+  --bg-dark: #0b1512;
+  --brand-green: #064e3b;
+  --brand-green-hover: #047857;
+  --brand-green-light: #e6f4f0;
+  --text-dark: #0f172a;
+  --text-muted: #475569;
+  --accent-amber: #d97706;
+  --accent-orange: #ea580c;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f1f5f9;
+  color: #0f172a;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Industrial Grid Mesh Background */
+.bg-grid-pattern {
+  background-color: #f8fafc;
+  background-image: 
+    linear-gradient(to right, rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.12) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.bg-dark-grid {
+  background-color: #081511;
+  background-image: 
+    linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Bevel & Chrome Heavy Metal Plates */
+.metal-plate {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #cbd5e1;
+  border-bottom: 2px solid #94a3b8;
+  box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08), inset 0 1px 0 #ffffff;
+}
+
+.metal-plate:hover {
+  border-color: #047857;
+  box-shadow: 0 20px 40px -10px rgba(6, 78, 59, 0.18), inset 0 1px 0 #ffffff;
+}
+
+.metal-plate-dark {
+  background: linear-gradient(180deg, #0f241d 0%, #071510 100%);
+  border: 1px solid #14532d;
+  box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.btn-bevel-green {
+  background: linear-gradient(180deg, #059669 0%, #064e3b 100%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 14px rgba(6, 78, 59, 0.35);
+}
+.btn-bevel-green:hover {
+  background: linear-gradient(180deg, #10b981 0%, #047857 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 20px rgba(6, 78, 59, 0.45);
+}
+
+.btn-bevel-amber {
+  background: linear-gradient(180deg, #ea580c 0%, #c2410c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 14px rgba(234, 88, 12, 0.35);
+}
+.btn-bevel-amber:hover {
+  background: linear-gradient(180deg, #f97316 0%, #ea580c 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 20px rgba(234, 88, 12, 0.45);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #e2e8f0;
+}
+::-webkit-scrollbar-thumb {
+  background: #64748b;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #064e3b;
 }
