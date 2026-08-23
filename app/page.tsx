@@ -156,9 +156,6 @@ export default function HomePage() {
             <a href={COMPANY_CONTACTS.viberLink} className="hover:text-purple-300 flex items-center gap-1 transition">
               <span className="w-2 h-2 rounded-full bg-[#7360f2]"></span> Viber
             </a>
-            <a href={COMPANY_CONTACTS.whatsappLink} target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 flex items-center gap-1 transition">
-              <span className="w-2 h-2 rounded-full bg-[#25D366]"></span> WhatsApp
-            </a>
 
             {/* Language Switch */}
             <div className="flex items-center bg-black/50 rounded-lg border border-slate-700 p-0.5 ml-2">
@@ -440,15 +437,6 @@ export default function HomePage() {
                     title="Viber"
                   >
                     <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </a>
-                  <a
-                    href={COMPANY_CONTACTS.whatsappLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-[#25D366] hover:bg-[#1faa4f] text-white p-3.5 sm:p-4 rounded-xl flex items-center justify-center shadow-lg transition"
-                    title="WhatsApp"
-                  >
-                    <Send className="w-4 h-4 sm:w-5 sm:h-5" />
                   </a>
                 </div>
               </div>
@@ -1011,7 +999,7 @@ export default function HomePage() {
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {lang === "ru" ? "Телефон (для связи в Viber / WhatsApp)" : "Telefon"}
+                  {lang === "ru" ? "Телефон (для связи в Viber)" : "Telefon (Viber)"}
                 </label>
                 <input
                   type="text"
@@ -1192,19 +1180,11 @@ export default function HomePage() {
         </button>
         <a
           href={COMPANY_CONTACTS.viberLink}
-          className="bg-[#7360f2] text-white p-2.5 rounded-xl flex items-center justify-center shadow"
+          className="bg-[#7360f2] text-white p-2.5 px-4 rounded-xl flex items-center justify-center shadow gap-1 text-xs font-bold"
           title="Viber"
         >
           <MessageSquare className="w-4 h-4" />
-        </a>
-        <a
-          href={COMPANY_CONTACTS.whatsappLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-[#25D366] text-white p-2.5 rounded-xl flex items-center justify-center shadow"
-          title="WhatsApp"
-        >
-          <Send className="w-4 h-4" />
+          <span>Viber</span>
         </a>
         <button
           onClick={() => handleOpenQuote()}
