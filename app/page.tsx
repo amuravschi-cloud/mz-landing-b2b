@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { 
   Phone, 
@@ -25,7 +25,8 @@ import {
   ChevronDown,
   Scale,
   Building2,
-  PackageCheck
+  PackageCheck,
+  ArrowUp
 } from "lucide-react";
 import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { METAL_PRODUCTS, BASES_LIST, COMPANY_CONTACTS } from "./data/catalog";
@@ -38,6 +39,24 @@ export default function HomePage() {
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
   const [modalItemTitle, setModalItemTitle] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Scroll to top button listener
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 400) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // Form state
   const [formName, setFormName] = useState("");
@@ -52,7 +71,7 @@ export default function HomePage() {
     offset: ["start start", "end start"]
   });
 
-  const heroImageY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const heroImageY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
 
   const handleOpenQuote = (title?: string) => {
     setModalItemTitle(title || (lang === "ru" ? "Запрос расчёта наличия и цен" : "Solicită ofertă de preț"));
@@ -79,7 +98,7 @@ export default function HomePage() {
     : METAL_PRODUCTS.filter(p => p.category === activeCatalogTab);
 
   return (
-    <div className="relative min-h-screen bg-[#f4f7f6] text-slate-900 overflow-x-hidden font-sans">
+    <div className="relative min-h-screen bg-[#f4f7f6] text-slate-900 overflow-x-hidden font-sans pb-20 sm:pb-0">
       
       {/* 1. TOP STATUS & SCHEDULE BAR */}
       <div className="bg-[#0b1713] text-slate-200 text-xs py-2 px-4 border-b border-emerald-900/60">
@@ -263,7 +282,7 @@ export default function HomePage() {
       {/* 3. HERO SECTION WITH PARALLAX & REAL BASE SCALE PHOTO */}
       <section 
         ref={heroRef}
-        className="relative min-h-[640px] lg:min-h-[720px] flex items-center bg-[#071813] text-white overflow-hidden border-b-4 border-[#064e3b]"
+        className="relative min-h-[600px] lg:min-h-[720px] flex items-center bg-[#071813] text-white overflow-hidden border-b-4 border-[#064e3b]"
       >
         {/* PARALLAX REAL PHOTO OF THE METAL BASE (IMG_0065) */}
         <motion.div 
@@ -274,21 +293,21 @@ export default function HomePage() {
             src={getAssetPath("/images/real/hero_img_0065.jpg")}
             alt="Реальная металлобаза Metalica Zuev с козловым краном"
             fill
-            className="object-cover object-center brightness-95 saturate-100"
+            className="object-cover object-center brightness-90 saturate-105"
             priority
           />
-          {/* Subtle soft dark backdrop for text readability only under typography */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/45 to-transparent" />
+          {/* Enhanced dark gradient backdrop for crystal clear typography contrast on mobile */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/50 sm:from-black/80 sm:via-black/50 sm:to-transparent" />
           <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#f4f7f6] to-transparent" />
         </motion.div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
             {/* Left Content */}
-            <div className="lg:col-span-8 space-y-6">
+            <div className="lg:col-span-7 xl:col-span-8 space-y-4 sm:space-y-6">
               
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-900/80 border border-emerald-500/40 text-emerald-300 text-xs sm:text-sm font-bold tracking-wide">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/90 border border-emerald-500/50 text-emerald-300 text-xs sm:text-sm font-bold tracking-wide backdrop-blur-md shadow-md">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
                 <span>
                   {lang === "ru" 
@@ -297,7 +316,7 @@ export default function HomePage() {
                 </span>
               </div>
 
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05] text-white">
+              <h1 className="text-3xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.08] text-white drop-shadow-lg">
                 {lang === "ru" ? (
                   <>
                     Металл для <br />
@@ -311,42 +330,42 @@ export default function HomePage() {
                 )}
               </h1>
 
-              <p className="text-base sm:text-xl text-slate-200 max-w-2xl font-normal leading-relaxed">
+              <p className="text-sm sm:text-xl text-slate-100 max-w-2xl font-medium leading-relaxed drop-shadow">
                 {lang === "ru"
                   ? "450+ позиций сертифицированного металлопроката в наличии. 3 открытые металлобазы и логистический хаб в Молдове. Комплектация заказов любой сложности, резка в размер и оперативная доставка."
                   : "Peste 450 de poziții în stoc permanent. 3 depozite metalice și hub logistic. Verificăm stocul, debităm la dimensiune și livrăm în toată Moldova."}
               </p>
 
               {/* Stats Bar */}
-              <div className="grid grid-cols-3 gap-4 max-w-lg pt-4 border-t border-white/20 text-white">
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 max-w-lg pt-2 sm:pt-3 border-t border-white/30 text-white">
                 <div>
-                  <div className="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">30+</div>
-                  <div className="text-xs text-slate-300 font-medium">{lang === "ru" ? "лет опыта" : "ani experiență"}</div>
+                  <div className="text-xl sm:text-3xl font-black text-emerald-400 font-mono">30+</div>
+                  <div className="text-[11px] sm:text-xs text-slate-200 font-medium">{lang === "ru" ? "лет опыта" : "ani experiență"}</div>
                 </div>
-                <div className="border-l border-white/20 pl-4">
-                  <div className="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">450+</div>
-                  <div className="text-xs text-slate-300 font-medium">{lang === "ru" ? "позиций на складах" : "poziții în stoc"}</div>
+                <div className="border-l border-white/30 pl-3 sm:pl-4">
+                  <div className="text-xl sm:text-3xl font-black text-emerald-400 font-mono">450+</div>
+                  <div className="text-[11px] sm:text-xs text-slate-200 font-medium">{lang === "ru" ? "позиций на складах" : "poziții în stoc"}</div>
                 </div>
-                <div className="border-l border-white/20 pl-4">
-                  <div className="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">3 + 1</div>
-                  <div className="text-xs text-slate-300 font-medium">{lang === "ru" ? "базы и хаб" : "depozite și hub"}</div>
+                <div className="border-l border-white/30 pl-3 sm:pl-4">
+                  <div className="text-xl sm:text-3xl font-black text-emerald-400 font-mono">3 + 1</div>
+                  <div className="text-[11px] sm:text-xs text-slate-200 font-medium">{lang === "ru" ? "базы и хаб" : "depozite și hub"}</div>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-4 pt-3">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
                 <button
                   onClick={() => handleOpenQuote()}
-                  className="btn-bevel-green text-white font-black text-sm sm:text-base px-8 py-4 rounded-xl shadow-xl transition transform active:scale-95 flex items-center justify-center gap-2.5"
+                  className="btn-bevel-green text-white font-black text-xs sm:text-base px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl shadow-xl transition transform active:scale-95 flex items-center justify-center gap-2"
                 >
-                  <FileText className="w-5 h-5 text-emerald-200" />
+                  <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-200" />
                   <span>{lang === "ru" ? "Запросить расчет наличия и цен" : "Solicită o ofertă"}</span>
                   <span>→</span>
                 </button>
 
                 <a
                   href={`tel:${COMPANY_CONTACTS.phoneRaw}`}
-                  className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 font-bold text-sm sm:text-base px-6 py-4 rounded-xl flex items-center justify-center gap-2 transition"
+                  className="bg-black/50 hover:bg-black/70 backdrop-blur-md text-white border border-white/30 font-bold text-xs sm:text-base px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl flex items-center justify-center gap-2 transition"
                 >
                   <Phone className="w-4 h-4 text-emerald-400" />
                   <span className="font-mono">{COMPANY_CONTACTS.phoneDisplay}</span>
@@ -355,50 +374,50 @@ export default function HomePage() {
                 <div className="flex items-center gap-2">
                   <a
                     href={COMPANY_CONTACTS.viberLink}
-                    className="bg-[#7360f2] hover:bg-[#624ee0] text-white p-4 rounded-xl flex items-center justify-center shadow-lg transition"
+                    className="bg-[#7360f2] hover:bg-[#624ee0] text-white p-3.5 sm:p-4 rounded-xl flex items-center justify-center shadow-lg transition"
                     title="Viber"
                   >
-                    <MessageSquare className="w-5 h-5" />
+                    <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
                   </a>
                   <a
                     href={COMPANY_CONTACTS.whatsappLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-[#25D366] hover:bg-[#1faa4f] text-white p-4 rounded-xl flex items-center justify-center shadow-lg transition"
+                    className="bg-[#25D366] hover:bg-[#1faa4f] text-white p-3.5 sm:p-4 rounded-xl flex items-center justify-center shadow-lg transition"
                     title="WhatsApp"
                   >
-                    <Send className="w-5 h-5" />
+                    <Send className="w-4 h-4 sm:w-5 sm:h-5" />
                   </a>
                 </div>
               </div>
             </div>
 
-            {/* Right Express Card */}
-            <div className="lg:col-span-4 bg-white/95 backdrop-blur-xl border-2 border-slate-200 p-6 sm:p-8 rounded-3xl shadow-2xl space-y-4 text-slate-900">
-              <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+            {/* Right Express Card - Compact on Mobile & Translucent */}
+            <div className="lg:col-span-5 xl:col-span-4 bg-white/90 sm:bg-white/95 backdrop-blur-xl border border-white/40 sm:border-slate-200 p-4 sm:p-7 rounded-2xl sm:rounded-3xl shadow-2xl space-y-3 sm:space-y-4 text-slate-900">
+              <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-ping"></span>
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#064e3b]">
+                  <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping"></span>
+                  <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#064e3b]">
                     {lang === "ru" ? "Прямой расчет сметы" : "Calcul rapid deviz"}
                   </span>
                 </div>
-                <span className="text-[11px] text-slate-500 font-mono font-bold">
+                <span className="text-[10px] sm:text-[11px] text-slate-500 font-mono font-bold">
                   {lang === "ru" ? "Ответ за 15 мин" : "15 minute"}
                 </span>
               </div>
 
-              <div className="space-y-1">
-                <h3 className="text-lg font-black text-slate-900">
+              <div className="space-y-0.5">
+                <h3 className="text-base sm:text-lg font-black text-slate-900">
                   {lang === "ru" ? "Отправьте список металла" : "Trimiteți lista de materiale"}
                 </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <p className="text-[11px] sm:text-xs text-slate-600 leading-snug">
                   {lang === "ru"
                     ? "Укажите нужные позиции — дежурный менеджер проверит наличие на всех складах и сформирует расчет."
                     : "Lăsați numărul de telefon — managerul vă va contacta direct pentru ofertă."}
                 </p>
               </div>
 
-              <form onSubmit={handleFormSubmit} className="space-y-3 pt-1">
+              <form onSubmit={handleFormSubmit} className="space-y-2.5 pt-0.5">
                 <div>
                   <input
                     type="text"
@@ -406,7 +425,7 @@ export default function HomePage() {
                     placeholder={lang === "ru" ? "Ваш телефон (+373 ...)" : "Telefonul dvs."}
                     value={formPhone}
                     onChange={(e) => setFormPhone(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b] focus:ring-1 focus:ring-[#064e3b]"
+                    className="w-full bg-slate-50/90 border border-slate-300 rounded-xl px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b] focus:ring-1 focus:ring-[#064e3b]"
                   />
                 </div>
                 <div>
@@ -415,20 +434,20 @@ export default function HomePage() {
                     placeholder={lang === "ru" ? "Что требуется? (напр.: 5 т арматуры 12 мм, профильная труба)" : "De exemplu: armătură 12 mm, 2 tone"}
                     value={formNote}
                     onChange={(e) => setFormNote(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b] focus:ring-1 focus:ring-[#064e3b]"
+                    className="w-full bg-slate-50/90 border border-slate-300 rounded-xl px-3.5 py-2 text-[11px] sm:text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b] focus:ring-1 focus:ring-[#064e3b]"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full btn-bevel-green text-white font-bold text-sm py-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2"
+                  className="w-full btn-bevel-green text-white font-bold text-xs sm:text-sm py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2"
                 >
-                  <Send className="w-4 h-4 text-emerald-200" />
+                  <Send className="w-3.5 h-3.5 text-emerald-200" />
                   <span>{lang === "ru" ? "Получить наличие и цены" : "Trimite solicitarea →"}</span>
                 </button>
               </form>
 
-              <div className="text-[11px] text-slate-500 text-center flex items-center justify-center gap-1.5 pt-1">
+              <div className="text-[10px] sm:text-[11px] text-slate-500 text-center flex items-center justify-center gap-1.5 pt-0.5">
                 <Clock className="w-3.5 h-3.5 text-[#064e3b]" />
                 <span>{lang === "ru" ? "Кишинёв: до 17:00 | Орхей (Сб): до 14:00" : "Program normal de lucru"}</span>
               </div>
@@ -564,7 +583,7 @@ export default function HomePage() {
       {/* 4.5 ABOUT COMPANY SECTION (30+ YEARS EXPERIENCE, DIRECT IMPORT) */}
       <section id="company" className="py-16 sm:py-24 bg-[#0a1b15] text-white border-b border-emerald-900/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
             <div className="lg:col-span-7 space-y-6">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950 text-emerald-400 text-xs font-black uppercase tracking-wider border border-emerald-700/60">
@@ -598,33 +617,35 @@ export default function HomePage() {
                   : "Parteneriatele directe cu combinatele metalurgice garantează grosimea reală a metalului, certificate de calitate la fiecare lot și un sortiment de peste 450 de poziții în stoc."}
               </p>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2">
-                <div className="p-4 rounded-2xl bg-emerald-950/70 border border-emerald-800/80">
-                  <div className="text-2xl font-black text-emerald-400 font-mono">1989</div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 pt-2">
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-950/70 border border-emerald-800/80">
+                  <div className="text-xl sm:text-2xl font-black text-emerald-400 font-mono">1989</div>
                   <div className="text-xs text-slate-300 font-medium">{lang === "ru" ? "Год основания" : "Anul fondării"}</div>
                 </div>
-                <div className="p-4 rounded-2xl bg-emerald-950/70 border border-emerald-800/80">
-                  <div className="text-2xl font-black text-emerald-400 font-mono">450+</div>
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-950/70 border border-emerald-800/80">
+                  <div className="text-xl sm:text-2xl font-black text-emerald-400 font-mono">450+</div>
                   <div className="text-xs text-slate-300 font-medium">{lang === "ru" ? "Позиций металла" : "Poziții în stoc"}</div>
                 </div>
-                <div className="p-4 rounded-2xl bg-emerald-950/70 border border-emerald-800/80 col-span-2 sm:col-span-1">
-                  <div className="text-2xl font-black text-emerald-400 font-mono">3 + 1</div>
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-emerald-950/70 border border-emerald-800/80 col-span-2 sm:col-span-1">
+                  <div className="text-xl sm:text-2xl font-black text-emerald-400 font-mono">3 + 1</div>
                   <div className="text-xs text-slate-300 font-medium">{lang === "ru" ? "Базы + Лог. Хаб" : "Depozite + Hub"}</div>
                 </div>
               </div>
             </div>
 
-            <div className="lg:col-span-5 relative h-80 sm:h-[440px] rounded-3xl overflow-hidden border-2 border-emerald-700 shadow-2xl">
-              <Image
-                src={getAssetPath("/images/real/DSC00421.jpg")}
-                alt="Склад металлопроката Metalica Zuev"
-                fill
-                className="object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 bg-black/70 backdrop-blur-md px-4 py-3 rounded-xl border border-white/10 text-xs text-slate-200">
-                <div className="font-bold text-white uppercase text-[11px] text-emerald-400">Metalica Zuev SRL</div>
-                <div>{lang === "ru" ? "Крупнейший склад сортового и фасонного металлопроката в Молдове" : "Depozit deschis de produse metalice"}</div>
+            {/* Photo showing entire base without black plate obstruction */}
+            <div className="lg:col-span-5 flex flex-col space-y-3">
+              <div className="relative h-64 sm:h-[380px] rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-emerald-700/80 shadow-2xl">
+                <Image
+                  src={getAssetPath("/images/real/DSC00421.jpg")}
+                  alt="Склад металлопроката Metalica Zuev"
+                  fill
+                  className="object-cover object-center"
+                />
+              </div>
+              <div className="bg-emerald-950/80 border border-emerald-800/60 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs text-slate-300">
+                <span className="font-bold text-emerald-400 uppercase text-[11px]">Metalica Zuev SRL</span>
+                <span className="text-slate-300 text-[11px]">{lang === "ru" ? "Склад сортового и фасонного проката" : "Depozit deschis"}</span>
               </div>
             </div>
 
@@ -949,33 +970,70 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 8. FOOTER */}
-      <footer className="bg-[#0b1713] text-slate-400 text-xs py-10 border-t border-emerald-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 relative bg-white rounded-lg p-0.5 flex items-center justify-center">
-              <Image
-                src={getAssetPath("/images/logo/MZ_Logo_Dark_Green.png")}
-                alt="Metalica Zuev Logo"
-                width={28}
-                height={28}
-                className="object-contain"
-              />
+      {/* 8. FOOTER WITH FULL VISIBILITY & LARGE HORIZONTAL LOGO */}
+      <footer className="bg-[#0b1713] text-slate-300 text-xs pt-12 pb-28 sm:pb-12 border-t border-emerald-950">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-6 border-b border-emerald-900/60">
+            
+            {/* Full Horizontal Logo in Footer */}
+            <div className="flex flex-col items-center md:items-start gap-3">
+              <div className="relative h-12 w-48 sm:w-56 flex items-center">
+                <Image
+                  src={getAssetPath("/images/logo/MZ_Logo_Dark_Green.png")}
+                  alt="Metalica Zuev Logo"
+                  fill
+                  className="object-contain object-center md:object-left"
+                />
+              </div>
+              <p className="text-[11px] text-slate-400 text-center md:text-left max-w-sm">
+                {lang === "ru" 
+                  ? "Крупнейший поставщик сертифицированного чёрного металлопроката в Молдове с 1989 года." 
+                  : "Cel mai mare furnizor de produse metalurgice din Republica Moldova din 1989."}
+              </p>
             </div>
-            <span className="font-black text-white text-sm">METALICA ZUEV SRL</span>
-            <span>• © 1989–{new Date().getFullYear()}</span>
+
+            {/* Direct Contacts in Footer */}
+            <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-right">
+              <div className="space-y-1">
+                <div className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">
+                  {lang === "ru" ? "Отдел продаж (Кишинёв & Молдова)" : "Vânzări"}
+                </div>
+                <a 
+                  href={`tel:${COMPANY_CONTACTS.phoneRaw}`} 
+                  className="font-mono text-base sm:text-lg font-black text-white hover:text-emerald-400 transition"
+                >
+                  {COMPANY_CONTACTS.phoneDisplay}
+                </a>
+              </div>
+
+              <div className="space-y-1 sm:border-l sm:border-emerald-900/60 sm:pl-6">
+                <div className="text-[11px] text-emerald-400 font-bold uppercase tracking-wider">
+                  {lang === "ru" ? "Металлобаза Орхей" : "Depozit Orhei"}
+                </div>
+                <a 
+                  href="tel:+37323580008" 
+                  className="font-mono text-base sm:text-lg font-black text-white hover:text-emerald-400 transition"
+                >
+                  0235 80 008
+                </a>
+              </div>
+            </div>
+
           </div>
-          <div className="flex items-center gap-6 font-mono text-slate-300">
-            <a href={`tel:${COMPANY_CONTACTS.phoneRaw}`} className="font-bold hover:text-emerald-400">
-              {COMPANY_CONTACTS.phoneDisplay}
-            </a>
-            <span>{COMPANY_CONTACTS.hoursMain}</span>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
+            <div>
+              © 1989–{new Date().getFullYear()} Metalica Zuev SRL. {lang === "ru" ? "Все права защищены." : "Toate drepturile rezervate."}
+            </div>
+            <div>
+              {lang === "ru" ? "Кишинёв (ул. Индустриальная 48, ул. Транснистрия 3A) · Орхей (ул. Унирий 49D) · Сынжера" : "Chișinău · Orhei · Sîngera"}
+            </div>
           </div>
         </div>
       </footer>
 
       {/* 9. MOBILE STICKY CALL / ACTION BAR */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#081b15]/95 border-t border-emerald-800 p-2 sm:hidden shadow-2xl flex items-center justify-around gap-2 backdrop-blur-lg">
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#081b15]/95 border-t border-emerald-800 p-2.5 sm:hidden shadow-2xl flex items-center justify-around gap-2 backdrop-blur-lg">
         <a
           href={`tel:${COMPANY_CONTACTS.phoneRaw}`}
           className="flex-1 btn-bevel-green text-white font-bold py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 text-xs shadow"
@@ -1008,7 +1066,23 @@ export default function HomePage() {
         </button>
       </div>
 
-      {/* 10. MODAL: QUOTE REQUEST */}
+      {/* 10. SCROLL TO TOP FLOATING BUTTON */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 10 }}
+            onClick={scrollToTop}
+            className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-40 bg-[#064e3b] hover:bg-[#047857] text-white p-3 sm:p-3.5 rounded-full shadow-2xl border-2 border-emerald-400 flex items-center justify-center transition"
+            title={lang === "ru" ? "Наверх" : "Sus"}
+          >
+            <ArrowUp className="w-5 h-5" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* 11. MODAL: QUOTE REQUEST */}
       <AnimatePresence>
         {isQuoteModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">

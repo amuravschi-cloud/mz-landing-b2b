@@ -64,6 +64,15 @@ export const metadata: Metadata = {
     locale: "ru_MD",
     type: "website",
   },
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" }
+    ],
+    apple: [
+      { url: "/apple-icon.png", type: "image/png" }
+    ],
+  },
   robots: {
     index: true,
     follow: true,

@@ -193,27 +193,29 @@ export const BASES_LIST: BaseLocation[] = [
     title: "Металлобаза №2 (Кишинёв)",
     titleRo: "Depozit Metalic №2 (Chișinău)",
     city: "Chișinău",
-    address: "str. Transnistria, 3A (заезд с str. Vadul lui Vodă, 142)",
-    addressRo: "str. Transnistria, 3A (acces din str. Vadul lui Vodă, 142)",
+    address: "str. Transnistria, 3A (заезд с str. Vadul lui Vodă, 120)",
+    addressRo: "str. Transnistria, 3A (acces din str. Vadul lui Vodă, 120)",
     type: "Открытая металлобаза · Склад металла",
     typeRo: "Depozit deschis · Acces tiruri",
     hours: "Пн–Пт: 08:00 – 17:00",
     hoursRo: "Lu–Vi: 08:00 – 17:00",
-    mapUrl: "https://maps.google.com/?q=Vadul%20lui%20Voda%20142%20Chisinau%20Moldova",
+    phone: "+373 68 47-15-30",
+    phoneRaw: "+37368471530",
+    mapUrl: "https://maps.app.goo.gl/xhWm1L364p8SXJp76",
     features: [
       "Открытый склад металлопроката",
       "Лентопильная резка",
-      "Удобный подъезд длинномеров",
+      "Удобный подъезд длинномеров (заезд с Вадул-луй-Водэ, 120)",
       "Погрузка крановым оборудованием"
     ],
     featuresRo: [
       "Depozit de produse metalice",
       "Debitare la fierăstrău",
-      "Acces comod pentru camioane lungi",
+      "Acces comod pentru camioane lungi (din Vadul lui Vodă, 120)",
       "Încărcare mecanizată"
     ],
-    desc: "Открытая металлобаза с удобным заездом с улицы Вадул-луй-Водэ (142), оборудованная под отгрузку тяжелых длинномеров.",
-    descRo: "Depozit cu acces direct din Vadul lui Vodă 142, specializat pe deservirea transportului de mare tonaj.",
+    desc: "Открытая металлобаза с удобным заездом с улицы Вадул-луй-Водэ (120), оборудованная под отгрузку тяжелых длинномеров.",
+    descRo: "Depozit cu acces direct din Vadul lui Vodă 120, specializat pe deservirea transportului de mare tonaj.",
     image: "/images/real/DSC00332-1.jpg"
   },
   {
@@ -230,7 +232,7 @@ export const BASES_LIST: BaseLocation[] = [
     isSaturdayOpen: true,
     phone: "0235 80 008",
     phoneRaw: "+37323580008",
-    mapUrl: "https://maps.google.com/?q=Unirii%2049D%20Orhei%20Moldova",
+    mapUrl: "https://maps.app.goo.gl/yhESzmBsVhN75ckV8",
     features: [
       "Прямой телефон базы: 0235 80 008",
       "Отгрузка по субботам с 08:00 до 14:00",
@@ -258,7 +260,7 @@ export const BASES_LIST: BaseLocation[] = [
     typeRo: "Hub logistic și distribuție",
     hours: "Пн–Пт: 08:00 – 17:00",
     hoursRo: "Lu–Vi: 08:00 – 17:00",
-    mapUrl: "https://maps.google.com/?q=Industriala%203%20Singera%20Moldova",
+    mapUrl: "https://maps.app.goo.gl/tkr8Hh78sAzqx8VcA",
     features: [
       "Площадка тяжелого фасонного проката",
       "Склады балок и швеллеров",
