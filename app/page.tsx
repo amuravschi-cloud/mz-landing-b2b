@@ -392,25 +392,25 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Right Express Card - Compact on Mobile & Translucent */}
-            <div className="lg:col-span-5 xl:col-span-4 bg-white/90 sm:bg-white/95 backdrop-blur-xl border border-white/40 sm:border-slate-200 p-4 sm:p-7 rounded-2xl sm:rounded-3xl shadow-2xl space-y-3 sm:space-y-4 text-slate-900">
+            {/* Right Express Card - Desktop Only (on mobile the base photo is completely visible, actions available in hero buttons & sticky bar) */}
+            <div className="hidden lg:block lg:col-span-5 xl:col-span-4 bg-white/95 backdrop-blur-xl border border-slate-200 p-7 rounded-3xl shadow-2xl space-y-4 text-slate-900">
               <div className="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
                 <div className="flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping"></span>
-                  <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#064e3b]">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#064e3b]">
                     {lang === "ru" ? "Прямой расчет сметы" : "Calcul rapid deviz"}
                   </span>
                 </div>
-                <span className="text-[10px] sm:text-[11px] text-slate-500 font-mono font-bold">
+                <span className="text-[11px] text-slate-500 font-mono font-bold">
                   {lang === "ru" ? "Ответ за 15 мин" : "15 minute"}
                 </span>
               </div>
 
               <div className="space-y-0.5">
-                <h3 className="text-base sm:text-lg font-black text-slate-900">
+                <h3 className="text-lg font-black text-slate-900">
                   {lang === "ru" ? "Отправьте список металла" : "Trimiteți lista de materiale"}
                 </h3>
-                <p className="text-[11px] sm:text-xs text-slate-600 leading-snug">
+                <p className="text-xs text-slate-600 leading-snug">
                   {lang === "ru"
                     ? "Укажите нужные позиции — дежурный менеджер проверит наличие на всех складах и сформирует расчет."
                     : "Lăsați numărul de telefon — managerul vă va contacta direct pentru ofertă."}
@@ -425,7 +425,7 @@ export default function HomePage() {
                     placeholder={lang === "ru" ? "Ваш телефон (+373 ...)" : "Telefonul dvs."}
                     value={formPhone}
                     onChange={(e) => setFormPhone(e.target.value)}
-                    className="w-full bg-slate-50/90 border border-slate-300 rounded-xl px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b] focus:ring-1 focus:ring-[#064e3b]"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b] focus:ring-1 focus:ring-[#064e3b]"
                   />
                 </div>
                 <div>
@@ -434,13 +434,13 @@ export default function HomePage() {
                     placeholder={lang === "ru" ? "Что требуется? (напр.: 5 т арматуры 12 мм, профильная труба)" : "De exemplu: armătură 12 mm, 2 tone"}
                     value={formNote}
                     onChange={(e) => setFormNote(e.target.value)}
-                    className="w-full bg-slate-50/90 border border-slate-300 rounded-xl px-3.5 py-2 text-[11px] sm:text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b] focus:ring-1 focus:ring-[#064e3b]"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b] focus:ring-1 focus:ring-[#064e3b]"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full btn-bevel-green text-white font-bold text-xs sm:text-sm py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2"
+                  className="w-full btn-bevel-green text-white font-bold text-sm py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2"
                 >
                   <Send className="w-3.5 h-3.5 text-emerald-200" />
                   <span>{lang === "ru" ? "Получить наличие и цены" : "Trimite solicitarea →"}</span>
