@@ -79,45 +79,46 @@ export default function WeightReferenceTable({ lang, onOpenCalc }: WeightReferen
         {isOpen && (
           <div className="mt-4 bg-white border-2 border-slate-300 rounded-3xl p-5 sm:p-8 shadow-xl space-y-6 animate-fade-in">
             
-            {/* TOP CONTROLS: CATEGORY TABS & SEARCH */}
-            <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+            {/* TOP CONTROLS: CATEGORY SELECT DROPDOWN & SEARCH */}
+            <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
               
-              {/* Category Pills */}
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-2 lg:pb-0 scrollbar-none">
-                {METAL_CALC_CATEGORIES.map(cat => (
-                  <button
-                    key={cat.id}
-                    onClick={() => {
-                      setSelectedCatId(cat.id);
-                      setSearchQuery("");
-                    }}
-                    className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition ${
-                      selectedCatId === cat.id
-                        ? "bg-[#064e3b] text-white shadow-md"
-                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                    }`}
-                  >
-                    {lang === "ru" ? cat.name.split("(")[0] : cat.nameRo.split("(")[0]}
-                  </button>
-                ))}
+              {/* Category Select Dropdown */}
+              <div className="flex-1 max-w-md">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                  {lang === "ru" ? "Выберите категорию проката:" : "Selectați categoria:"}
+                </label>
+                <select
+                  value={selectedCatId}
+                  onChange={(e) => {
+                    setSelectedCatId(e.target.value);
+                    setSearchQuery("");
+                  }}
+                  className="w-full bg-slate-50 border-2 border-slate-300 hover:border-[#064e3b] text-slate-900 text-xs sm:text-sm font-bold rounded-xl px-4 py-2.5 focus:outline-none focus:border-[#064e3b] cursor-pointer shadow-sm"
+                >
+                  {METAL_CALC_CATEGORIES.map(cat => (
+                    <option key={cat.id} value={cat.id}>
+                      {lang === "ru" ? cat.name : cat.nameRo}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Search & Calc trigger */}
               <div className="flex items-center gap-3">
                 <div className="relative flex-1 sm:w-64">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
                   <input
                     type="text"
                     placeholder={lang === "ru" ? "Поиск размера (напр.: 12, 40х20)..." : "Căutare dimensiune..."}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b]"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl pl-9 pr-3 py-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b]"
                   />
                 </div>
 
                 <button
                   onClick={onOpenCalc}
-                  className="btn-bevel-green text-white font-bold text-xs px-4 py-2 rounded-xl whitespace-nowrap shadow transition"
+                  className="btn-bevel-green text-white font-bold text-xs px-4 py-2.5 rounded-xl whitespace-nowrap shadow transition"
                 >
                   {lang === "ru" ? "Калькулятор онлайн →" : "Calculator →"}
                 </button>
