@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { getAssetPath } from "./utils";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -142,6 +143,10 @@ export default function RootLayout({
   return (
     <html lang="ru" className={`${geistSans.variable} ${geistMono.variable} scroll-smooth`}>
       <head>
+        <link rel="icon" type="image/png" sizes="192x192" href={getAssetPath("/icon.png")} />
+        <link rel="icon" type="image/x-icon" href={getAssetPath("/favicon.ico")} />
+        <link rel="shortcut icon" href={getAssetPath("/favicon.ico")} />
+        <link rel="apple-touch-icon" sizes="180x180" href={getAssetPath("/apple-icon.png")} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
