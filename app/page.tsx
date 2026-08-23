@@ -26,20 +26,33 @@ import {
   Scale,
   Building2,
   PackageCheck,
-  ArrowUp
+  ArrowUp,
+  Calculator,
+  UploadCloud,
+  FileSpreadsheet,
+  Paperclip
 } from "lucide-react";
 import { motion, useScroll, useTransform, AnimatePresence } from "motion/react";
 import { METAL_PRODUCTS, BASES_LIST, COMPANY_CONTACTS } from "./data/catalog";
 import { getAssetPath } from "./utils";
+import MetalCalculatorModal from "./components/MetalCalculatorModal";
+import WeightReferenceTable from "./components/WeightReferenceTable";
 
 export default function HomePage() {
   const [lang, setLang] = useState<"ru" | "ro">("ru");
   const [selectedBaseIndex, setSelectedBaseIndex] = useState<number>(0);
   const [activeCatalogTab, setActiveCatalogTab] = useState<string>("all");
+  
+  // Modals
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+  const [isCalcModalOpen, setIsCalcModalOpen] = useState(false);
   const [modalItemTitle, setModalItemTitle] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // File Upload State
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Scroll to top button listener
   useEffect(() => {
@@ -64,19 +77,26 @@ export default function HomePage() {
   const [formNote, setFormNote] = useState("");
   const [formSuccess, setFormSuccess] = useState(false);
 
-  // Parallax Scroll Control
+  // Parallax Scroll Control (Smooth cinematic depth for base photo)
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"]
   });
 
-  const heroImageY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
+  const heroImageY = useTransform(scrollYProgress, [0, 1], ["0%", "35%"]);
+  const heroImageScale = useTransform(scrollYProgress, [0, 1], [1.05, 1.18]);
 
   const handleOpenQuote = (title?: string) => {
     setModalItemTitle(title || (lang === "ru" ? "Запрос расчёта наличия и цен" : "Solicită ofertă de preț"));
     setIsQuoteModalOpen(true);
     setFormSuccess(false);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setUploadedFile(e.target.files[0]);
+    }
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -88,6 +108,7 @@ export default function HomePage() {
       setFormName("");
       setFormPhone("");
       setFormNote("");
+      setUploadedFile(null);
     }, 2800);
   };
 
@@ -124,6 +145,14 @@ export default function HomePage() {
           </div>
 
           <div className="flex items-center gap-4 text-xs font-semibold text-slate-300">
+            <button
+              onClick={() => setIsCalcModalOpen(true)}
+              className="text-emerald-400 hover:text-emerald-300 flex items-center gap-1 font-bold transition"
+            >
+              <Calculator className="w-3.5 h-3.5" />
+              <span>{lang === "ru" ? "Калькулятор веса" : "Calculator"}</span>
+            </button>
+
             <a href={COMPANY_CONTACTS.viberLink} className="hover:text-purple-300 flex items-center gap-1 transition">
               <span className="w-2 h-2 rounded-full bg-[#7360f2]"></span> Viber
             </a>
@@ -176,6 +205,13 @@ export default function HomePage() {
             <a href="#catalog" className="hover:text-[#064e3b] transition py-1">
               {lang === "ru" ? "Сортамент" : "Produse"}
             </a>
+            <button 
+              onClick={() => setIsCalcModalOpen(true)}
+              className="text-[#064e3b] hover:text-emerald-700 font-bold transition flex items-center gap-1.5 py-1"
+            >
+              <Calculator className="w-4 h-4" />
+              <span>{lang === "ru" ? "Калькулятор" : "Calculator"}</span>
+            </button>
             <a href="#company" className="hover:text-[#064e3b] transition py-1">
               {lang === "ru" ? "О компании" : "Despre noi"}
             </a>
@@ -191,7 +227,7 @@ export default function HomePage() {
           </nav>
 
           {/* Phone & CTA */}
-          <div className="flex items-center gap-4 sm:gap-6 shrink-0">
+          <div className="flex items-center gap-3 sm:gap-6 shrink-0">
             <a
               href={`tel:${COMPANY_CONTACTS.phoneRaw}`}
               className="hidden lg:flex flex-col items-end text-right px-1 py-1 rounded hover:bg-slate-100 transition whitespace-nowrap"
@@ -203,6 +239,14 @@ export default function HomePage() {
                 {COMPANY_CONTACTS.phoneDisplay}
               </span>
             </a>
+
+            <button
+              onClick={() => setIsCalcModalOpen(true)}
+              className="hidden md:flex bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs sm:text-sm px-4 py-3 rounded-xl transition items-center gap-1.5 border border-slate-300"
+            >
+              <Calculator className="w-4 h-4 text-[#064e3b]" />
+              <span>{lang === "ru" ? "Калькулятор" : "Calculator"}</span>
+            </button>
 
             <button
               onClick={() => handleOpenQuote()}
@@ -238,6 +282,16 @@ export default function HomePage() {
               >
                 {lang === "ru" ? "Сортамент металлопроката (450+ позиций)" : "Sortiment produse metalice"}
               </a>
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsCalcModalOpen(true);
+                }}
+                className="w-full text-left text-sm font-bold text-[#064e3b] py-2 border-b border-slate-100 flex items-center gap-2"
+              >
+                <Calculator className="w-4 h-4" />
+                <span>{lang === "ru" ? "B2B Металлокалькулятор (ГОСТ)" : "Calculator produse metalice"}</span>
+              </button>
               <a
                 href="#company"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -279,35 +333,35 @@ export default function HomePage() {
         </AnimatePresence>
       </header>
 
-      {/* 3. HERO SECTION WITH PARALLAX & REAL BASE SCALE PHOTO */}
+      {/* 3. HERO SECTION WITH DEEP CINEMATIC PARALLAX & REAL BASE SCALE PHOTO */}
       <section 
         ref={heroRef}
-        className="relative min-h-[600px] lg:min-h-[720px] flex items-center bg-[#071813] text-white overflow-hidden border-b-4 border-[#064e3b]"
+        className="relative min-h-[640px] lg:min-h-[780px] flex items-center bg-[#071813] text-white overflow-hidden border-b-4 border-[#064e3b]"
       >
-        {/* PARALLAX REAL PHOTO OF THE METAL BASE (IMG_0065) */}
+        {/* PARALLAX REAL PHOTO OF THE METAL BASE (Smooth viewport lingering) */}
         <motion.div 
-          style={{ y: heroImageY }}
-          className="absolute inset-0 z-0 scale-105"
+          style={{ y: heroImageY, scale: heroImageScale }}
+          className="absolute inset-0 z-0 origin-center"
         >
           <Image
             src={getAssetPath("/images/real/hero_img_0065.jpg")}
             alt="Реальная металлобаза Metalica Zuev с козловым краном"
             fill
-            className="object-cover object-center brightness-90 saturate-105"
+            className="object-cover object-center brightness-95 saturate-105"
             priority
           />
-          {/* Enhanced dark gradient backdrop for crystal clear typography contrast on mobile */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/50 sm:from-black/80 sm:via-black/50 sm:to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#f4f7f6] to-transparent" />
+          {/* Enhanced gradient backdrop keeping photo vibrant and readable */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/40 sm:from-black/75 sm:via-black/45 sm:to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#f4f7f6] via-[#f4f7f6]/40 to-transparent" />
         </motion.div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-24">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             
             {/* Left Content */}
             <div className="lg:col-span-7 xl:col-span-8 space-y-4 sm:space-y-6">
               
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/90 border border-emerald-500/50 text-emerald-300 text-xs sm:text-sm font-bold tracking-wide backdrop-blur-md shadow-md">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-950/90 border border-emerald-500/50 text-emerald-300 text-xs sm:text-sm font-bold tracking-wide backdrop-blur-md shadow-md">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
                 <span>
                   {lang === "ru" 
@@ -361,6 +415,14 @@ export default function HomePage() {
                   <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-200" />
                   <span>{lang === "ru" ? "Запросить расчет наличия и цен" : "Solicită o ofertă"}</span>
                   <span>→</span>
+                </button>
+
+                <button
+                  onClick={() => setIsCalcModalOpen(true)}
+                  className="bg-emerald-900/80 hover:bg-emerald-800 text-white border border-emerald-500/60 font-bold text-xs sm:text-base px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl flex items-center justify-center gap-2 transition backdrop-blur-md shadow-md"
+                >
+                  <Calculator className="w-4 h-4 text-emerald-300" />
+                  <span>{lang === "ru" ? "Калькулятор веса" : "Calculator"}</span>
                 </button>
 
                 <a
@@ -447,7 +509,7 @@ export default function HomePage() {
                 </button>
               </form>
 
-              <div className="text-[10px] sm:text-[11px] text-slate-500 text-center flex items-center justify-center gap-1.5 pt-0.5">
+              <div className="text-[11px] text-slate-500 text-center flex items-center justify-center gap-1.5 pt-0.5">
                 <Clock className="w-3.5 h-3.5 text-[#064e3b]" />
                 <span>{lang === "ru" ? "Кишинёв: до 17:00 | Орхей (Сб): до 14:00" : "Program normal de lucru"}</span>
               </div>
@@ -481,11 +543,16 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Category Dropdown & Quick Selector */}
+            {/* Category Dropdown & Calc button */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <span className="text-xs text-slate-500 font-bold uppercase tracking-wider hidden sm:inline">
-                {lang === "ru" ? "Фильтр категории:" : "Filtru categorie:"}
-              </span>
+              <button
+                onClick={() => setIsCalcModalOpen(true)}
+                className="bg-[#064e3b] hover:bg-[#047857] text-white text-sm font-bold rounded-xl px-4 py-3 flex items-center justify-center gap-2 shadow-sm transition"
+              >
+                <Calculator className="w-4 h-4 text-emerald-300" />
+                <span>{lang === "ru" ? "Калькулятор веса онлайн" : "Calculator masă"}</span>
+              </button>
+
               <select
                 value={activeCatalogTab}
                 onChange={(e) => setActiveCatalogTab(e.target.value)}
@@ -542,14 +609,22 @@ export default function HomePage() {
                     ))}
                   </div>
 
-                  {/* Action Button */}
-                  <div className="pt-2">
+                  {/* Action Buttons */}
+                  <div className="pt-2 flex gap-2">
                     <button
                       onClick={() => handleOpenQuote(`${lang === "ru" ? prod.title : prod.titleRo}`)}
-                      className="w-full bg-[#064e3b] hover:bg-[#047857] text-white font-bold text-xs py-3.5 rounded-xl transition flex items-center justify-center gap-2 shadow-sm"
+                      className="flex-1 bg-[#064e3b] hover:bg-[#047857] text-white font-bold text-xs py-3.5 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm"
                     >
                       <FileText className="w-4 h-4 text-emerald-200" />
-                      <span>{lang === "ru" ? "Запросить наличие и цену" : "Verifică stocul →"}</span>
+                      <span>{lang === "ru" ? "Запросить цену" : "Ofertă"}</span>
+                    </button>
+                    
+                    <button
+                      onClick={() => setIsCalcModalOpen(true)}
+                      className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold p-3.5 rounded-xl border border-slate-300 transition"
+                      title={lang === "ru" ? "Рассчитать вес по ГОСТу" : "Calculator masă"}
+                    >
+                      <Calculator className="w-4 h-4 text-[#064e3b]" />
                     </button>
                   </div>
                 </div>
@@ -569,16 +644,28 @@ export default function HomePage() {
                   : "Avem peste 450 de poziții în depozitele din Chișinău și Orhei. Contactați managerul direct."}
               </p>
             </div>
-            <button
-              onClick={() => handleOpenQuote()}
-              className="btn-bevel-green text-white font-extrabold text-xs sm:text-sm px-8 py-4 rounded-xl transition shrink-0 flex items-center gap-2 shadow-lg"
-            >
-              <FileText className="w-4 h-4" />
-              <span>{lang === "ru" ? "Запросить общий расчет" : "Solicită ofertă completă"}</span>
-            </button>
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                onClick={() => setIsCalcModalOpen(true)}
+                className="bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-700 font-bold text-xs sm:text-sm px-6 py-4 rounded-xl transition flex items-center gap-2"
+              >
+                <Calculator className="w-4 h-4" />
+                <span>{lang === "ru" ? "Калькулятор веса" : "Calculator"}</span>
+              </button>
+              <button
+                onClick={() => handleOpenQuote()}
+                className="btn-bevel-green text-white font-extrabold text-xs sm:text-sm px-8 py-4 rounded-xl transition shrink-0 flex items-center gap-2 shadow-lg"
+              >
+                <FileText className="w-4 h-4" />
+                <span>{lang === "ru" ? "Запросить общий расчет" : "Solicită ofertă completă"}</span>
+              </button>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* 4.75 WEIGHT REFERENCE TABLE (ENGINEERING HANDBOOK) */}
+      <WeightReferenceTable lang={lang} onOpenCalc={() => setIsCalcModalOpen(true)} />
 
       {/* 4.5 ABOUT COMPANY SECTION (30+ YEARS EXPERIENCE, DIRECT IMPORT) */}
       <section id="company" className="py-16 sm:py-24 bg-[#0a1b15] text-white border-b border-emerald-900/80">
@@ -633,7 +720,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Photo showing entire base without black plate obstruction */}
+            {/* Photo showing entire base without obstruction */}
             <div className="lg:col-span-5 flex flex-col space-y-3">
               <div className="relative h-64 sm:h-[380px] rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-emerald-700/80 shadow-2xl">
                 <Image
@@ -886,7 +973,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. LEAD CAPTURE SPECIFICATION UPLOAD FORM */}
+      {/* 7. LEAD CAPTURE SPECIFICATION UPLOAD FORM WITH FILE ATTACHMENT */}
       <section id="quote-section" className="py-16 sm:py-24 bg-[#f1f5f9] text-slate-900 border-b border-slate-300">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -897,12 +984,12 @@ export default function HomePage() {
                 {lang === "ru" ? "Прямой расчет сметы" : "Calcul rapid al devizului"}
               </div>
               <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-                {lang === "ru" ? "Оставьте номер — мы перезвоним" : "Lasă-ne numărul — te sunăm noi."}
+                {lang === "ru" ? "Отправьте смету или список — мы перезвоним" : "Trimiteți devizul sau lista — vă contactăm rapid."}
               </h2>
               <p className="text-slate-600 text-sm sm:text-base">
                 {lang === "ru"
-                  ? "Опишите требуемые позиции или оставьте контакты. Менеджер свяжется для подтверждения наличия на складе."
-                  : "Descrie ce îți trebuie sau lasă doar datele de contact. Managerul va preciza detaliile la telefon."}
+                  ? "Прикрепите файл сметы (Excel, PDF) или укажите нужные позиции. Менеджер свяжется для подтверждения наличия на складе."
+                  : "Atașați fișierul devizului (Excel, PDF) sau lista de materiale. Managerul vă va confirma stocul."}
               </p>
             </div>
 
@@ -938,15 +1025,70 @@ export default function HomePage() {
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  {lang === "ru" ? "Что вам требуется (список позиций или смета)" : "De ce ai nevoie (opțional)"}
+                  {lang === "ru" ? "Что вам требуется (список позиций)" : "De ce ai nevoie (opțional)"}
                 </label>
                 <textarea
-                  rows={3}
+                  rows={2}
                   placeholder={lang === "ru" ? "Например: 5 тонн арматуры 12 мм, 200 м профильной трубы 40х20..." : "De exemplu: armătură de 12 mm, 2 tone"}
                   value={formNote}
                   onChange={(e) => setFormNote(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b]"
                 />
+              </div>
+
+              {/* FILE ATTACHMENT / DROPZONE */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  {lang === "ru" ? "Прикрепить файл сметы / чертеж / фото списка (опционально):" : "Atașează deviz / schiță / poză listă (opțional):"}
+                </label>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept=".pdf,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.dwg"
+                  className="hidden"
+                />
+                
+                {uploadedFile ? (
+                  <div className="bg-emerald-50 border-2 border-dashed border-emerald-400 rounded-xl p-3.5 flex items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-2 text-emerald-900 font-bold">
+                      <FileSpreadsheet className="w-5 h-5 text-[#064e3b]" />
+                      <span className="truncate max-w-[240px]">{uploadedFile.name}</span>
+                      <span className="text-[10px] text-slate-500 font-mono">({Math.round(uploadedFile.size / 1024)} KB)</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setUploadedFile(null)}
+                      className="text-rose-600 hover:text-rose-800 p-1 font-bold"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    onClick={() => fileInputRef.current?.click()}
+                    className="border-2 border-dashed border-slate-300 hover:border-[#064e3b] bg-slate-50 hover:bg-slate-100/80 rounded-xl p-4 text-center cursor-pointer transition flex flex-col items-center justify-center gap-1.5 text-xs text-slate-600"
+                  >
+                    <UploadCloud className="w-6 h-6 text-[#064e3b]" />
+                    <span className="font-bold text-slate-800">
+                      {lang === "ru" ? "Нажмите для выбора файла (Excel, PDF, JPG, DWG)" : "Click pentru a atașa fișier (Excel, PDF, JPG)"}
+                    </span>
+                    <span className="text-[10px] text-slate-500">
+                      {lang === "ru" ? "или сделайте фото чертежа / спецификации на смартфон" : "sau faceți o poză a schiței de pe telefon"}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Direct Viber quick send alternative */}
+              <div className="flex items-center justify-between gap-3 pt-1">
+                <a
+                  href={COMPANY_CONTACTS.viberLink}
+                  className="flex-1 bg-[#7360f2]/15 hover:bg-[#7360f2]/25 text-[#7360f2] border border-[#7360f2]/40 text-xs font-bold py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 transition"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>{lang === "ru" ? "Скинуть смету сразу в Viber" : "Trimite pe Viber"}</span>
+                </a>
               </div>
 
               <button
@@ -1041,6 +1183,13 @@ export default function HomePage() {
           <PhoneCall className="w-4 h-4" />
           <span>{lang === "ru" ? "Позвонить" : "Sună"}</span>
         </a>
+        <button
+          onClick={() => setIsCalcModalOpen(true)}
+          className="bg-emerald-900 border border-emerald-700 text-emerald-300 p-2.5 rounded-xl flex items-center justify-center shadow"
+          title="Калькулятор"
+        >
+          <Calculator className="w-4 h-4" />
+        </button>
         <a
           href={COMPANY_CONTACTS.viberLink}
           className="bg-[#7360f2] text-white p-2.5 rounded-xl flex items-center justify-center shadow"
@@ -1082,7 +1231,7 @@ export default function HomePage() {
         )}
       </AnimatePresence>
 
-      {/* 11. MODAL: QUOTE REQUEST */}
+      {/* 11. MODAL: QUOTE REQUEST WITH ATTACHMENT */}
       <AnimatePresence>
         {isQuoteModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
@@ -1113,7 +1262,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <form onSubmit={handleFormSubmit} className="space-y-4">
+              <form onSubmit={handleFormSubmit} className="space-y-3.5">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
                     {lang === "ru" ? "Ваше имя" : "Nume"}
@@ -1124,7 +1273,7 @@ export default function HomePage() {
                     placeholder={lang === "ru" ? "Иван / Представитель компании" : "Numele dvs."}
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b]"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b]"
                   />
                 </div>
 
@@ -1138,7 +1287,7 @@ export default function HomePage() {
                     placeholder="+373 __ ___ ___"
                     value={formPhone}
                     onChange={(e) => setFormPhone(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b]"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b]"
                   />
                 </div>
 
@@ -1152,6 +1301,19 @@ export default function HomePage() {
                     value={formNote}
                     onChange={(e) => setFormNote(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#064e3b]"
+                  />
+                </div>
+
+                {/* Upload attachment in modal */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    {lang === "ru" ? "Прикрепить смету / фото списка:" : "Atașează deviz / poză:"}
+                  </label>
+                  <input
+                    type="file"
+                    onChange={handleFileChange}
+                    accept=".pdf,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png"
+                    className="text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#e6f4f0] file:text-[#064e3b] hover:file:bg-[#d0ece3] cursor-pointer w-full"
                   />
                 </div>
 
@@ -1172,6 +1334,13 @@ export default function HomePage() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* 12. MODAL: B2B METAL CALCULATOR */}
+      <MetalCalculatorModal
+        isOpen={isCalcModalOpen}
+        onClose={() => setIsCalcModalOpen(false)}
+        lang={lang}
+      />
 
     </div>
   );
